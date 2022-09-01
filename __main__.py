@@ -6,7 +6,6 @@ from datetime import datetime
 from airflow.utils.dates import days_ago
 from airflow.decorators import dag, task, task_group
 from example_extract.helpers import data_sub_names
-from github.main import get_github_trends, transform_github_trends_response
 
 
 abs_path = os.path.abspath(os.path.dirname(__file__))
@@ -14,6 +13,8 @@ abs_path = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from reddit.main import get_reddit_content
+from feeds.feed_fetcher import get_company_blog_feeds
+from github.main import get_github_trends, transform_github_trends_response
 from buttondown.main import create_draft_newsletter
 from config import ENV
 
@@ -101,18 +102,28 @@ def newsletter():
             gh_trends = transform_github_trends_response(get_github_trends())
             return gh_trends
 
+        @task(task_id="fetch_company_blogs")
+        def fetch_company_blogs():
+            company_blogs_content = get_company_blog_feeds()
+            return company_blogs_content
+
         @task(task_id="append_to_content")
-        def append_to_content(reddit_data, data_from_github, template_content):
+        def append_to_content(*args):
             content = template_content
             content += data_from_github
             content += reddit_data
+            content += data_from_compan_blogs
             return content
 
         data_from_reddit = fetch_from_reddit()
-        data_from_github = fetch_github_trends()
+        # data_from_github = fetch_github_trends()
+        data_from_company_blogs = fetch_company_blogs()
         content = append_to_content(
-            data_from_reddit, data_from_github, template_content
-        )
+            data_from_reddit, 
+            # data_from_github, 
+            template_content, 
+            data_from_company_blogs
+        ) 
 
         return content
 
