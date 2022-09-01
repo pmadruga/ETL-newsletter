@@ -51,7 +51,7 @@ def format_aggregated_feeds(feeds_aggregated, category):
     """
     Last step of the process
     """
-    final_aggregated_content = f"{category}\n"\
+    final_aggregated_content = f"\n{category}\n"\
         "---\n"\
 
     for item in np.array(feeds_aggregated).flatten():

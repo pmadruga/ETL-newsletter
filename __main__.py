@@ -108,11 +108,11 @@ def newsletter():
             return company_blogs_content
 
         @task(task_id="append_to_content")
-        def append_to_content(*args):
+        def append_to_content(data_from_reddit, template_content, data_from_company_blogs):
             content = template_content
-            content += data_from_github
-            content += reddit_data
-            content += data_from_compan_blogs
+            # content += data_from_github
+            content += data_from_reddit
+            content += data_from_company_blogs
             return content
 
         data_from_reddit = fetch_from_reddit()
