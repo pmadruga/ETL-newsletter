@@ -108,7 +108,9 @@ def newsletter():
             return company_blogs_content
 
         @task(task_id="append_to_content")
-        def append_to_content(data_from_reddit, template_content, data_from_company_blogs):
+        def append_to_content(
+            data_from_reddit, template_content, data_from_company_blogs
+        ):
             content = template_content
             # content += data_from_github
             content += data_from_reddit
@@ -119,11 +121,11 @@ def newsletter():
         # data_from_github = fetch_github_trends()
         data_from_company_blogs = fetch_company_blogs()
         content = append_to_content(
-            data_from_reddit, 
-            # data_from_github, 
-            template_content, 
-            data_from_company_blogs
-        ) 
+            data_from_reddit,
+            # data_from_github,
+            template_content,
+            data_from_company_blogs,
+        )
 
         return content
 

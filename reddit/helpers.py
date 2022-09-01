@@ -15,12 +15,12 @@ def get_filename():
 def data_sub_names():
     names = [
         "DataScience",
-#        "DataEngineering",
+        #        "DataEngineering",
         "MachineLearning",
-#        "LearnMachineLearning",
+        #        "LearnMachineLearning",
         "AskStatistics",
         "LatestInML",
-#        "MLQuestions",
+        #        "MLQuestions",
     ]
 
     return names
