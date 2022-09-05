@@ -13,9 +13,10 @@ abs_path = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from reddit.main import get_reddit_content
-from feeds.feed_fetcher import get_company_blog_feeds
+from feeds.feed_fetcher import get_company_blog_feeds, get_podcast_feeds, get_youtube_feeds
 from github.main import get_github_trends, transform_github_trends_response
 from buttondown.main import create_draft_newsletter
+from helpers.dates import result
 from config import ENV
 
 
@@ -30,6 +31,10 @@ def get_filename():
 
     return final
 
+
+def get_header():   
+    header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world Pedro\n\n---'
+    return header
 
 def start_newsletter_template():
     # create empty file
@@ -61,7 +66,7 @@ def newsletter():
     def group_1():
         @task(task_id="init_newsletter_template")
         def init_newsletter_template():
-            return start_newsletter_template()
+            return get_header()
 
         template_content = init_newsletter_template()
         return template_content
@@ -97,9 +102,14 @@ def newsletter():
         #         def fetch_from_SOMEWHERE():
         #             return True
 
-        @task(task_id="fetch_github_trends")
-        def fetch_github_trends():
-            gh_trends = transform_github_trends_response(get_github_trends())
+        @task(task_id="fetch_github_trends_python")
+        def fetch_github_trends_python():
+            gh_trends = transform_github_trends_response(get_github_trends('python'), 'python')
+            return gh_trends
+        
+        @task(task_id="fetch_github_trends_jupyter")
+        def fetch_github_trends_jupyter():
+            gh_trends = transform_github_trends_response(get_github_trends('jupyter-notebook'), 'jupyter notebook')
             return gh_trends
 
         @task(task_id="fetch_company_blogs")
@@ -107,24 +117,44 @@ def newsletter():
             company_blogs_content = get_company_blog_feeds()
             return company_blogs_content
 
+        @task(task_id="fetch_podcast_feeds")
+        def fetch_podcast_feeds():
+            podcast_feeds_content = get_podcast_feeds()
+            return podcast_feeds_content
+
+        @task(task_id="fetch_youtube_feeds")
+        def fetch_youtube_feeds():
+            youtube_feeds_content = get_youtube_feeds()
+            return youtube_feeds_content
+
         @task(task_id="append_to_content")
         def append_to_content(
-            data_from_reddit, template_content, data_from_company_blogs
+            data_from_reddit, data_from_github_python, data_from_github_jupyter, template_content, data_from_company_blogs, data_from_youtube, data_from_podcasts
         ):
+            # order matters!
             content = template_content
-            # content += data_from_github
-            content += data_from_reddit
             content += data_from_company_blogs
+            content += data_from_podcasts
+            content += data_from_youtube
+            content += data_from_reddit
+            content += data_from_github_jupyter
+            content += data_from_github_python
             return content
 
         data_from_reddit = fetch_from_reddit()
-        # data_from_github = fetch_github_trends()
+        data_from_github_python = fetch_github_trends_python()
+        data_from_github_jupyter = fetch_github_trends_jupyter()
         data_from_company_blogs = fetch_company_blogs()
+        data_from_youtube = fetch_youtube_feeds()
+        data_from_podcasts = fetch_podcast_feeds()
         content = append_to_content(
             data_from_reddit,
-            # data_from_github,
+            data_from_github_python,
+            data_from_github_jupyter,
             template_content,
             data_from_company_blogs,
+            data_from_youtube,
+            data_from_podcasts
         )
 
         return content
@@ -146,7 +176,7 @@ def newsletter():
 
         return [
             load_from_reddit(content_from_datasources),
-            # load_to_buttondown(content_from_datasources),
+            load_to_buttondown(content_from_datasources),
         ]
 
     #    group_1()

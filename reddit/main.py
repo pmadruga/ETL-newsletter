@@ -45,13 +45,14 @@ def format_sub_name(sub_name):
 
 
 def extract_from_reddit(reddit):
-    content = "\n## Reddit"
+    content = "\n## **Reddit**"
     subs = helpers.data_sub_names()
     for sub in subs:
-        content += f"\n\n### *{format_sub_name(sub)}*"
+        # content += f"\n\n### *{format_sub_name(sub)}*"
 
         for submission in reddit.subreddit(sub).top("week", limit=3):
-            content += f"\n- {submission.title} ([🔗 link](https://reddit.com{submission.permalink}); ⬆️  {submission.ups} ; 💬 {submission.num_comments})"
+            # content += f"\n- {submission.title}, _at [r/{format_sub_name(sub)}](https://reddit.com{submission.permalink})_ (⬆{submission.ups} ; 💬{submission.num_comments})"
+            content += f"\n- {submission.title}, _at [r/{format_sub_name(sub)}](https://reddit.com{submission.permalink})_ (💬{submission.num_comments})"
 
             sleep(0.3)
 
