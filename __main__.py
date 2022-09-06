@@ -56,7 +56,7 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 
 
 @dag(
-    schedule_interval="00 14 * * *",
+    schedule_interval=None,
     start_date=days_ago(2),
     catchup=False,
     default_args=args,

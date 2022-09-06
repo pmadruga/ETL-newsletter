@@ -20,7 +20,7 @@ def transform_github_trends_response(response, language):
     content = f"\n## **Github {language} trends**"
     for item in results:
         print(item)
-        info = f'\n- [{item["repo"]}]({item["repo_link"]}): {item["desc"]} ({item["added_stars"]})'
+        info = f'\n- [{item["repo"]}]({item["repo_link"]}): {item["desc"]}'
         content += info
 
     return content
