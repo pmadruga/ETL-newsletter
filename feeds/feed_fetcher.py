@@ -19,20 +19,43 @@ company_feeds_dict = [
 ]
 
 
-podcasts_feeds_dict = [{"url": "https://feed.podbean.com/datascienceathome/feed.xml", "blog_name": "Data Science At Home"}, 
-                       {"url": "https://dataskeptic.libsyn.com/rss", "blog_name": "Data Skeptic"},
-                       {"url": "https://anchor.fm/s/36b4844/podcast/rss", "blog_name": "Towards Data Science"},
-                       {"url": "https://changelog.com/practicalai/feed", "blog_name": "Practical AI"},
-                       {"url": "https://feeds.megaphone.fm/MLN2155636147", "blog_name": "The TWIML AI"},
-                       {"url": "https://feeds.sounder.fm/19201/rss.xml", "blog_name": "DataFramed"}
+podcasts_feeds_dict = [
+    {
+        "url": "https://feed.podbean.com/datascienceathome/feed.xml",
+        "blog_name": "Data Science At Home",
+    },
+    {"url": "https://dataskeptic.libsyn.com/rss", "blog_name": "Data Skeptic"},
+    {
+        "url": "https://anchor.fm/s/36b4844/podcast/rss",
+        "blog_name": "Towards Data Science",
+    },
+    {"url": "https://changelog.com/practicalai/feed", "blog_name": "Practical AI"},
+    {"url": "https://feeds.megaphone.fm/MLN2155636147", "blog_name": "The TWIML AI"},
+    {"url": "https://feeds.sounder.fm/19201/rss.xml", "blog_name": "DataFramed"},
+]
+youtube_feeds_dict = [
+    {
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCMLtBahI5DMrt0NPvDSoIRQ",
+        "blog_name": "Machine Learning Street Talk",
+    },
+    {
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCtYLUTtgS3k1Fg4y5tAhLbw",
+        "blog_name": "StatQuest",
+    },
+    {
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCYO_jab_esuFRV4b17AJtAw",
+        "blog_name": "3Blue1Brown",
+    },
+    {
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A",
+        "blog_name": "Open AI",
+    },
+    {
+        "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A",
+        "blog_name": "DeepMind",
+    },
+]
 
-                        ]
-youtube_feeds_dict = [{"url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCMLtBahI5DMrt0NPvDSoIRQ", "blog_name": "Machine Learning Street Talk"},
-                      {"url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCtYLUTtgS3k1Fg4y5tAhLbw", "blog_name": "StatQuest"},
-                      {"url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCYO_jab_esuFRV4b17AJtAw", "blog_name": "3Blue1Brown"},
-                      {"url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCXZCJLdBC09xxGZ6gcdrc6A", "blog_name": "Open AI"},
-                      {"url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A", "blog_name": "DeepMind"},
-                      ]  
 
 def fetch_feeds(specific_url, blog_name):
 
@@ -87,9 +110,10 @@ def format_aggregated_feeds(feeds_aggregated, category):
 def get_company_blog_feeds():
     return format_aggregated_feeds(batch_fetch_feeds(company_feeds_dict), "Blogs")
 
+
 def get_podcast_feeds():
     return format_aggregated_feeds(batch_fetch_feeds(podcasts_feeds_dict), "Podcasts")
 
+
 def get_youtube_feeds():
     return format_aggregated_feeds(batch_fetch_feeds(youtube_feeds_dict), "Youtube")
-

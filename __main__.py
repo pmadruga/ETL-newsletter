@@ -13,7 +13,11 @@ abs_path = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from reddit.main import get_reddit_content
-from feeds.feed_fetcher import get_company_blog_feeds, get_podcast_feeds, get_youtube_feeds
+from feeds.feed_fetcher import (
+    get_company_blog_feeds,
+    get_podcast_feeds,
+    get_youtube_feeds,
+)
 from github.main import get_github_trends, transform_github_trends_response
 from buttondown.main import create_draft_newsletter
 from helpers.dates import result
@@ -32,9 +36,10 @@ def get_filename():
     return final
 
 
-def get_header():   
+def get_header():
     header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world Pedro\n\n---'
     return header
+
 
 def start_newsletter_template():
     # create empty file
@@ -56,6 +61,7 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 
 
 @dag(
+    # schedule_interval="0 0 0 ? * SUN,MON *",
     schedule_interval=None,
     start_date=days_ago(2),
     catchup=False,
@@ -104,12 +110,16 @@ def newsletter():
 
         @task(task_id="fetch_github_trends_python")
         def fetch_github_trends_python():
-            gh_trends = transform_github_trends_response(get_github_trends('python'), 'python')
+            gh_trends = transform_github_trends_response(
+                get_github_trends("python"), "python"
+            )
             return gh_trends
-        
+
         @task(task_id="fetch_github_trends_jupyter")
         def fetch_github_trends_jupyter():
-            gh_trends = transform_github_trends_response(get_github_trends('jupyter-notebook'), 'jupyter notebook')
+            gh_trends = transform_github_trends_response(
+                get_github_trends("jupyter-notebook"), "jupyter notebook"
+            )
             return gh_trends
 
         @task(task_id="fetch_company_blogs")
@@ -129,7 +139,13 @@ def newsletter():
 
         @task(task_id="append_to_content")
         def append_to_content(
-            data_from_reddit, data_from_github_python, data_from_github_jupyter, template_content, data_from_company_blogs, data_from_youtube, data_from_podcasts
+            data_from_reddit,
+            data_from_github_python,
+            data_from_github_jupyter,
+            template_content,
+            data_from_company_blogs,
+            data_from_youtube,
+            data_from_podcasts,
         ):
             # order matters!
             content = template_content
@@ -154,7 +170,7 @@ def newsletter():
             template_content,
             data_from_company_blogs,
             data_from_youtube,
-            data_from_podcasts
+            data_from_podcasts,
         )
 
         return content

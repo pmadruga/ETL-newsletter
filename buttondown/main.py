@@ -1,11 +1,13 @@
 import requests
 import datetime
 from config import ENV
+from helpers.dates import result
 
 
 def get_newsletter_title():
     # get week number
-    week_number = datetime.date.today().isocalendar()[1]
+    week_number = result[0].isocalendar()[1]
+    # week_number = datetime.date.today().isocalendar()[1]
     return f"Week {week_number}"
 
 

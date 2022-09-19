@@ -5,7 +5,7 @@ domain = ENV["GITHUB_API_URL"]
 
 
 def get_github_trends(language):
-    api_url = f'{domain}/repo?lang={language}&since=weekly'
+    api_url = f"{domain}/repo?lang={language}&since=weekly"
     response = []
     try:
         response = requests.get(api_url)
@@ -27,7 +27,7 @@ def transform_github_trends_response(response, language):
 
 
 if __name__ == "__main__":
-    response = get_github_trends(language='python')
-    gh_trends = transform_github_trends_response(response, language='python')
+    response = get_github_trends(language="python")
+    gh_trends = transform_github_trends_response(response, language="python")
 
     print(gh_trends)
