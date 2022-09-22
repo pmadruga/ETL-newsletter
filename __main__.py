@@ -37,7 +37,7 @@ def get_filename():
 
 
 def get_header():
-    header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world Pedro\n\n---'
+    header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world\nCome say hi on [Twitter](https://twitter.com/pmadruga_)\n\n---'
     return header
 
 
@@ -62,7 +62,7 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 
 @dag(
     # schedule_interval="0 0 0 ? * SUN,MON *",
-    schedule_interval=None,
+    schedule_interval="0 5 * * 1",
     start_date=days_ago(2),
     catchup=False,
     default_args=args,

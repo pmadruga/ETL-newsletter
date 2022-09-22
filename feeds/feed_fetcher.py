@@ -32,6 +32,7 @@ podcasts_feeds_dict = [
     {"url": "https://changelog.com/practicalai/feed", "blog_name": "Practical AI"},
     {"url": "https://feeds.megaphone.fm/MLN2155636147", "blog_name": "The TWIML AI"},
     {"url": "https://feeds.sounder.fm/19201/rss.xml", "blog_name": "DataFramed"},
+    {"url": "https://anchor.fm/s/41286f68/podcast/rss", "blog_name": "Data Talks"},
 ]
 youtube_feeds_dict = [
     {
