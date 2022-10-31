@@ -59,6 +59,7 @@ youtube_feeds_dict = [
 
 
 def fetch_feeds(specific_url, blog_name):
+    print('fetching feeds for', blog_name)
 
     uh = feedparser.parse(specific_url)
     entries = []
@@ -88,9 +89,12 @@ def batch_fetch_feeds(feeds_dict):
     all_feeds = []
 
     for index, item in enumerate(feeds_dict):
-        posts_per_item = fetch_feeds(item["url"], item["blog_name"])
+        try:
+            posts_per_item = fetch_feeds(item["url"], item["blog_name"])
+            all_feeds.append(posts_per_item)
 
-        all_feeds.append(posts_per_item)
+        except:
+            continue
     return all_feeds
 
 

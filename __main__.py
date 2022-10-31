@@ -38,7 +38,15 @@ def get_filename():
 
 def get_header():
     header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world\nCome say hi on [Twitter](https://twitter.com/pmadruga_)\n\n---'
+## 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\n   
+#Highlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n
+### **Foreword**\n
+#Hello world\n
+#Come say hi on [Twitter](https://twitter.com/pmadruga_)\n\n
+#--- 
+#    """.format(length='multi-line', ordinal='second')
     return header
+
 
 
 def start_newsletter_template():
