@@ -57,9 +57,18 @@ youtube_feeds_dict = [
     },
 ]
 
+newsletters_feeds_dict = [
+    {
+        "url": "https://newsletter.sebastianraschka.com/?format=rss",
+        "blog_name": "Sebastian Raschka",
+    },
+    {"url": "https://lastweekin.ai/feed", "blog_name": "Last Week in AI"},
+    {"url": "https://jack-clark.net/feed/", "blog_name": "Import AI"},
+]
+
 
 def fetch_feeds(specific_url, blog_name):
-    print('fetching feeds for', blog_name)
+    print("fetching feeds for", blog_name)
 
     uh = feedparser.parse(specific_url)
     entries = []
@@ -122,3 +131,9 @@ def get_podcast_feeds():
 
 def get_youtube_feeds():
     return format_aggregated_feeds(batch_fetch_feeds(youtube_feeds_dict), "Youtube")
+
+
+def get_newsletter_feeds():
+    return format_aggregated_feeds(
+        batch_fetch_feeds(newsletters_feeds_dict), "Newsletters"
+    )

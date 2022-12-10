@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from reddit.main import get_reddit_content
 from feeds.feed_fetcher import (
     get_company_blog_feeds,
+    get_newsletter_feeds,
     get_podcast_feeds,
     get_youtube_feeds,
 )
@@ -37,16 +38,15 @@ def get_filename():
 
 
 def get_header():
-    header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world\nCome say hi on [Twitter](https://twitter.com/pmadruga_)\n\n---'
-## 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\n   
-#Highlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n
-### **Foreword**\n
-#Hello world\n
-#Come say hi on [Twitter](https://twitter.com/pmadruga_)\n\n
-#--- 
-#    """.format(length='multi-line', ordinal='second')
+    header = f'# 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\nHighlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n## **Foreword**\nHello world\nCome say hi on [Mastodon](https://sigmoid.social/@pmadruga). See you next week!\n\n---'
+    ## 5 Minutes of Data Science - week {result[0].isocalendar()[1]}\n
+    # Highlights from {result[0].strftime("%B %d")} to {result[len(result)-1].strftime("%B %d")}\n\n
+    ### **Foreword**\n
+    # Hello world\n
+    # Come say hi on [Twitter](https://twitter.com/pmadruga_)\n\n
+    # ---
+    #    """.format(length='multi-line', ordinal='second')
     return header
-
 
 
 def start_newsletter_template():
@@ -70,7 +70,7 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 
 @dag(
     # schedule_interval="0 0 0 ? * SUN,MON *",
-    schedule_interval="0 5 * * 1",
+    schedule_interval="0 2 * * 1",
     start_date=days_ago(2),
     catchup=False,
     default_args=args,
@@ -145,6 +145,11 @@ def newsletter():
             youtube_feeds_content = get_youtube_feeds()
             return youtube_feeds_content
 
+        @task(task_id="fetch_youtube_feeds")
+        def fetch_newsletter_feeds():
+            newsletter_feeds_content = get_newsletter_feeds()
+            return newsletter_feeds_content
+
         @task(task_id="append_to_content")
         def append_to_content(
             data_from_reddit,
@@ -154,10 +159,12 @@ def newsletter():
             data_from_company_blogs,
             data_from_youtube,
             data_from_podcasts,
+            data_from_newsletters
         ):
             # order matters!
             content = template_content
             content += data_from_company_blogs
+            content += data_from_newsletters
             content += data_from_podcasts
             content += data_from_youtube
             content += data_from_reddit
@@ -171,6 +178,7 @@ def newsletter():
         data_from_company_blogs = fetch_company_blogs()
         data_from_youtube = fetch_youtube_feeds()
         data_from_podcasts = fetch_podcast_feeds()
+        data_from_newsletters = fetch_newsletter_feeds()
         content = append_to_content(
             data_from_reddit,
             data_from_github_python,
@@ -179,6 +187,7 @@ def newsletter():
             data_from_company_blogs,
             data_from_youtube,
             data_from_podcasts,
+            data_from_newsletters
         )
 
         return content
