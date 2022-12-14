@@ -5,7 +5,6 @@ import pathlib
 from datetime import datetime
 from airflow.utils.dates import days_ago
 from airflow.decorators import dag, task, task_group
-from example_extract.helpers import data_sub_names
 
 
 abs_path = os.path.abspath(os.path.dirname(__file__))
@@ -70,8 +69,10 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 
 @dag(
     # schedule_interval="0 0 0 ? * SUN,MON *",
-    schedule_interval="0 2 * * 1",
-    start_date=days_ago(2),
+    schedule_interval="0 2 * * *",
+    description='Fetch content for newsletter',
+    # start_date=days_ago(2),
+    start_date=datetime(2021,11,1,0,0,0,0),
     catchup=False,
     default_args=args,
 )
@@ -145,7 +146,7 @@ def newsletter():
             youtube_feeds_content = get_youtube_feeds()
             return youtube_feeds_content
 
-        @task(task_id="fetch_youtube_feeds")
+        @task(task_id="fetch_newsletter_feeds")
         def fetch_newsletter_feeds():
             newsletter_feeds_content = get_newsletter_feeds()
             return newsletter_feeds_content

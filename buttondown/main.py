@@ -13,7 +13,7 @@ def get_newsletter_title():
 
 def create_draft_newsletter(content="test_body"):
     api_url = ENV["NEWSLETTER_API_URL"]
-    body = {"subject": get_newsletter_title(), "body": content}
+    body = {"subject": get_newsletter_title(), "body": content, "status":"draft"}
     header = {"Authorization": ENV["NEWSLETTER_AUTHORIZATION"]}
     try:
         response = requests.post(api_url, json=body, headers=header)
