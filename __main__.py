@@ -6,6 +6,7 @@ from datetime import datetime
 from airflow.utils.dates import days_ago
 from airflow.decorators import dag, task, task_group
 
+os.environ["no_proxy"] = "*"
 
 abs_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -70,9 +71,9 @@ args = {"email": [ENV["ADMIN_EMAIL"]], "email_on_failure": True}
 @dag(
     # schedule_interval="0 0 0 ? * SUN,MON *",
     schedule_interval="0 2 * * *",
-    description='Fetch content for newsletter',
+    description="Fetch content for newsletter",
     # start_date=days_ago(2),
-    start_date=datetime(2021,11,1,0,0,0,0),
+    start_date=datetime(2021, 11, 1, 0, 0, 0, 0),
     catchup=False,
     default_args=args,
 )
@@ -160,17 +161,17 @@ def newsletter():
             data_from_company_blogs,
             data_from_youtube,
             data_from_podcasts,
-            data_from_newsletters
+            data_from_newsletters,
         ):
             # order matters!
             content = template_content
-            content += data_from_company_blogs
-            content += data_from_newsletters
-            content += data_from_podcasts
-            content += data_from_youtube
             content += data_from_reddit
             content += data_from_github_jupyter
             content += data_from_github_python
+            content += data_from_newsletters
+            content += data_from_podcasts
+            content += data_from_youtube
+            content += data_from_company_blogs
             return content
 
         data_from_reddit = fetch_from_reddit()
@@ -188,7 +189,7 @@ def newsletter():
             data_from_company_blogs,
             data_from_youtube,
             data_from_podcasts,
-            data_from_newsletters
+            data_from_newsletters,
         )
 
         return content

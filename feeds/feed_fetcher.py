@@ -2,14 +2,18 @@ import numpy as np
 import pandas as pd
 import feedparser
 
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
 from helpers.dates import result
 
 
 company_feeds_dict = [
     {"url": "https://deepmind.com/blog/feed/basic/", "blog_name": "DeepMind"},
-    {"url": "http://googleaiblog.blogspot.com/atom.xml", "blog_name": "Google AI"},
+    # {"url": "http://googleaiblog.blogspot.com/atom.xml", "blog_name": "Google AI"},
     {"url": "https://openai.com/blog/rss/", "blog_name": "Open AI"},
-    #     {'url': 'https://feeds.feedburner.com/nvidiablog', 'blog_name': 'NVIDIA'},
+    #  {'url': 'https://feeds.feedburner.com/nvidiablog', 'blog_name': 'NVIDIA'},
     {"url": "https://www.amazon.science/index.rss", "blog_name": "Amazon Science"},
     #     {'url': 'https://aws.amazon.com/blogs/machine-learning/feed/', 'blog_name': 'AWS Machine Learning'},
     {
@@ -33,6 +37,8 @@ podcasts_feeds_dict = [
     {"url": "https://feeds.megaphone.fm/MLN2155636147", "blog_name": "The TWIML AI"},
     {"url": "https://feeds.sounder.fm/19201/rss.xml", "blog_name": "DataFramed"},
     {"url": "https://anchor.fm/s/41286f68/podcast/rss", "blog_name": "Data Talks"},
+    {"url": "https://feeds.buzzsprout.com/682433.rss", "blog_name": "The Data Exchange"},
+    {"url": "https://feed.podbean.com/datascienceathome/feed.xml", "blog_name": "Data Science at Home"},
 ]
 youtube_feeds_dict = [
     {
@@ -64,6 +70,11 @@ newsletters_feeds_dict = [
     },
     {"url": "https://lastweekin.ai/feed", "blog_name": "Last Week in AI"},
     {"url": "https://jack-clark.net/feed/", "blog_name": "Import AI"},
+    {"url": "https://nathanbenaich.substack.com/feed", "blog_name": "Guide to AI"},
+    {"url": "https://raillc.substack.com/feed", "blog_name": "Responsible AI"},
+    {"url": "https://newsletter.theaiedge.io/feed", "blog_name": "The AI Edge"},
+    {"url": "https://feeds.feedburner.com/zerotomastery/mlm", "blog_name": "Zero To Mastery"},
+    {"url": "https://gradientflow.substack.com/feed", "blog_name": "Gradient Flow"},
 ]
 
 
@@ -72,6 +83,8 @@ def fetch_feeds(specific_url, blog_name):
 
     uh = feedparser.parse(specific_url)
     entries = []
+
+    # print(uh.entries)
 
     for item in uh.entries:
         item_date = pd.to_datetime(item.published).tz_localize(None)
@@ -104,19 +117,32 @@ def batch_fetch_feeds(feeds_dict):
 
         except:
             continue
+
+    print("all feeds", all_feeds)
     return all_feeds
 
 
 def format_aggregated_feeds(feeds_aggregated, category):
     """
-    Last step of the process
+    Formatting the content.
     """
+    print("\n\n\n\n")
+    print(feeds_aggregated)
+    print("\n\n\n\n")
+
     final_aggregated_content = f"\n\n## **{category}**\n" "\n"
-    for item in np.array(feeds_aggregated).flatten():
-        for j in range(0, len(item)):
-            final_aggregated_content += (
-                f"- {item[j]['title']}, _by [{item[j]['name']}]({item[j]['link']})_ \n"
-            )
+    # for item in np.array(feeds_aggregated[2]).flatten():
+    #     for j in range(0, len(item)):
+    #         final_aggregated_content += (
+    #             f"- {item[j]['title']}, _by [{item[j]['name']}]({item[j]['link']})_ \n"
+    #         )
+
+    for items in feeds_aggregated:
+        if len(feeds_aggregated) > 0:
+            for item in items:
+                final_aggregated_content += (
+                    f"- {item['title']}, _by [{item['name']}]({item['link']})_ \n"
+                )
 
     return final_aggregated_content
 
@@ -137,3 +163,7 @@ def get_newsletter_feeds():
     return format_aggregated_feeds(
         batch_fetch_feeds(newsletters_feeds_dict), "Newsletters"
     )
+
+
+if __name__ == "__main__":
+    print("hey")

@@ -21,7 +21,7 @@ def transform_github_trends_response(response, language):
     print("THIS IS RESPONSE", response)
     # results = response["items"]
     results = response
-    content = f"\n## **Github {language} trends**"
+    content = f"\n\n## **Github {language} trends**"
     for item in results:
         print(item)
         info = f'\n- [{item["repositoryName"]}]({item["url"]}): {item["description"]}'

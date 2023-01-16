@@ -2,4 +2,4 @@ output/
 __pycache__/
 .env
 reddit/.env
-
+.vscode

@@ -45,7 +45,7 @@ def format_sub_name(sub_name):
 
 
 def extract_from_reddit(reddit):
-    content = "\n## **Reddit**"
+    content = "\n## **Reddit's top posts**"
     subs = helpers.data_sub_names()
     for sub in subs:
         # content += f"\n\n### *{format_sub_name(sub)}*"
